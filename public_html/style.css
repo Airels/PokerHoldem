@@ -2,10 +2,42 @@
 	text-align: center;
 }
 
+input {
+	width: 100px;
+}
+
 #error {
 	color: red;
 }
 
+#player {
+	display: inline-block;
+	position: absolute;
+	left: 0;
+	bottom: 15px;
+	right: 0;
+}
+
+#opponent1 {
+	display: inline-block;
+	position: absolute;
+	left: 0;
+}
+
+#opponent2 {
+	display: inline-block;
+	position: absolute;
+	top: 15px;
+	left: 0;
+	right: 0;
+}
+
+#opponent3 {
+	display: inline-block;
+	position: absolute;
+	right: 0;
+}
+
 .cards {
-	width: 200px;
+	width: 150px;
 }

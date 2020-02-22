@@ -1,6 +1,6 @@
 const express = require('express');
 const mustache = require('mustache-express');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 var game = require('./game.js');
@@ -22,9 +22,11 @@ app.get('/connect', (req, res) => {
 	let data = {error: ""};
 
 	if (req.query.error == 1)
-		data.error = "Un pseudonyme est obligatoire !";
-	else if (req.query.else == 2)
+		data.error = "Username is required !";
+	else if (req.query.error == 2)
 		data.error = "Can't add you to the party";
+	else if (req.query.error == 3)
+		data.error = "You must connect first";
 
 	res.render('index', data);
 });
@@ -35,10 +37,19 @@ app.get('/play', (req, res) => {
 	};
 
 	res.render('game', data);
+
+	game.startRound();
 });
 
 app.get('/update', (req, res) => {
+	try {
+		let username = req.cookies.username;
 
+		res.json(game.getGameInfo(username));
+	} catch (err) {
+		res.writeHead(400);
+		res.send();
+	}
 });
 
 app.get('/check', (req, res) => {
@@ -65,13 +76,10 @@ app.post('/connect', (req, res) => {
 		return;
 	}
 
-	let playerAdded = game.addPlayer(username);
-
-	if (!playerAdded) {
+	if (!game.addPlayer(username)) {
 		res.redirect('/connect?error=2');
 		return;
 	}
-
 
 	res.cookie("username", username);
 	res.redirect('/play');

@@ -1,4 +1,4 @@
-module.exports = (rank, suit) => {
+module.exports = function(rank, suit) {
 	this.rank = rank;
 	this.suit = suit;
 }

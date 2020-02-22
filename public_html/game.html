@@ -4,10 +4,64 @@
 		<title>Poker HoldEm - {{username}}</title>
 		<meta charset="utf-8" />
 		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="game.js"></script>
 	</head>
 
-	<body>
-		<img class="cards" src="resources/clubs/A.png" />
-		<img class="cards" src="resources/clubs/10.png" />
+	<body onload="init()">
+		<div id="deck">
+			Pot : <label id="pot"></label>
+
+			<img id="firstDeckCard" class="cards" src="" />
+			<img id="secondDeckCard" class="cards" src="" />
+			<img id="thirdDeckCard" class="cards" src="" />
+			<img id="fourthDeckCard" class="cards" src="" />
+			<img id="fifthDeckCard" class="cards" src="" />
+		</div>
+
+		<div id="player">
+			Bet : <label id="bet"></label>
+
+			<img id="firstCard" class="cards" src="" />
+			<img id="secondCard" class="cards" src="" />
+
+			Money : <label id="money"></label>
+
+				<br />
+
+			<input type="button" value="Fold" onclick="fold" />
+			<input type="button" value="Check" onclick="check" />
+			<input type="button" value="Raise" onclick="raise" />
+			<input type="text" placeholder="Raise amount" />
+		</div>
+
+		<div id="opponent1">
+			<img id="firstCardOpponent1" class="cards" src="" />
+			<img id="secondCardOpponent1" class="cards" src="" />
+
+				<br />
+
+			Username: <label></label> <br />
+			Bet : <label></label>
+		</div>
+
+		<div id="opponent2">
+			<img id="firstCardOpponent2" class="cards" src="" />
+			<img id="secondCardOpponent2" class="cards" src="" />
+
+			<br />
+
+			Username: <label></label> <br />
+			Bet : <label></label>
+		</div>
+
+		<div id="opponent3">
+			<img id="firstCardOpponent3" class="cards" src="" />
+			<img id="secondCardOpponent3" class="cards" src="" />
+
+			<br />
+
+			Username: <label></label> <br />
+			Bet : <label></label>
+		</div>
 	</body>
 </html>

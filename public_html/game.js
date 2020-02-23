@@ -1,7 +1,10 @@
 var lPot, lBet, lMoney;
 var firstCard, secondCard;
+var startButton;
 
 function init() {
+	startButton = document.getElementById("startTurn");
+
 	lPot = document.getElementById("pot");
 	lBet = document.getElementById("bet");
 	lMoney = document.getElementById("money");
@@ -25,6 +28,11 @@ function update() {
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4 && xhr.status == 200) {
 			let data = JSON.parse(xhr.responseText);
+
+			if (data.game.status.canStart)
+				startButton.style.display = "initial";
+			else
+				startButton.style.display = "none";
 
 			lPot.innerHTML = data.game.pot;
 
@@ -64,6 +72,11 @@ function update() {
 				document.getElementById('player').getElementsByTagName('input')[i].disabled = !data.player.yourTurn;
 			}
 
+			let raiseAmountText = document.getElementById('raiseAmount');
+
+			if (data.player.yourTurn && raiseAmountText.value < data.game.maxBet && raiseAmountText.value == "")
+				raiseAmountText.value = data.game.maxBet - data.player.bet;
+
 			let deck = data.game.deck;
 
 			for (let i = 0; i < deck.length; i++) {
@@ -74,6 +87,14 @@ function update() {
 			document.location.href = "/connect?error=3";
 		}
 	}
+}
+
+function startTurn() {
+	let xhr = new XMLHttpRequest();
+	xhr.open("GET", "/start");
+	xhr.send();
+
+	update();
 }
 
 function fold() {

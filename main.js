@@ -47,25 +47,37 @@ app.get('/update', (req, res) => {
 
 		res.json(game.getGameInfo(username));
 	} catch (err) {
+		console.error(err);
 		res.writeHead(400);
 		res.send();
 	}
 });
 
 app.get('/check', (req, res) => {
+	let username = req.cookies.username;
 
+	game.bet(game.getPlayer(username), 0);
+
+	res.end();
 });
 
 app.get('/raise/:amount', (req, res) => {
+	let username = req.cookies.username;
 
+	game.bet(game.getPlayer(username), req.params.amount);
+
+	res.end();
 });
 
 app.get('/fold', (req, res) => {
+	let username = req.cookies.username;
+	game.fold(username);
 
+	res.end();
 });
 
 app.get('/quit', (req, res) => {
-
+	let username = req.cookies.username;
 });
 
 app.post('/connect', (req, res) => {

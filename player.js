@@ -4,4 +4,5 @@ module.exports = function(username) {
 	this.bet = 0;
 	this.cards = [];
 	this.played = false;
+	this.hasFold = true;
 }

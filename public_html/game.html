@@ -11,11 +11,13 @@
 		<div id="deck">
 			Pot : <label id="pot"></label>
 
-			<img id="firstDeckCard" class="cards" src="" />
-			<img id="secondDeckCard" class="cards" src="" />
-			<img id="thirdDeckCard" class="cards" src="" />
-			<img id="fourthDeckCard" class="cards" src="" />
-			<img id="fifthDeckCard" class="cards" src="" />
+			<br />
+
+			<img id="deckCard1" class="cards" src="" />
+			<img id="deckCard2" class="cards" src="" />
+			<img id="deckCard3" class="cards" src="" />
+			<img id="deckCard4" class="cards" src="" />
+			<img id="deckCard5" class="cards" src="" />
 		</div>
 
 		<div id="player">
@@ -28,10 +30,10 @@
 
 				<br />
 
-			<input type="button" value="Fold" onclick="fold" />
-			<input type="button" value="Check" onclick="check" />
-			<input type="button" value="Raise" onclick="raise" />
-			<input type="text" placeholder="Raise amount" />
+			<input type="button" value="Fold" onclick="fold()" />
+			<input type="button" value="Check" onclick="check()" />
+			<input type="button" value="Raise" onclick="raise()" />
+			<input type="number" id="raiseAmount" placeholder="Raise amount" />
 		</div>
 
 		<div id="opponent1">

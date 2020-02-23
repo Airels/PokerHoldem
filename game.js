@@ -2,13 +2,15 @@ var Card = require('./card.js');
 var Player = require('./player.js');
 
 const PLAYER_LIMIT = 4;
+const PLAYER_MIN = 2;
 
 
 exports.createGame = () => {
 	this.turnNumber = 0;
 
 	this.players = [];
-	this.playerNext = undefined;
+	this.indexFirstPlayer = 0;
+	this.indexPlayerNext = 0;
 	this.inRound = false;
 
 	this.showCards = false;
@@ -29,7 +31,7 @@ exports.addPlayer = (username) => {
 	this.players.forEach((player) => {
 		if (player.username == username) {
 			found = true;
-			return;
+			return; // return for forEach, not for addPlayer
 		}
 	});
 
@@ -42,7 +44,7 @@ exports.addPlayer = (username) => {
 
 // GAME ACTIONS
 exports.startRound = () => {
-	if (!this.inRound || this.players.length > 1) {
+	if (!this.inRound && this.players.length >= PLAYER_MIN) {
 		this.inRound = true;
 		this.generateCards();
 		this.shuffle();
@@ -72,72 +74,102 @@ exports.distribute = () => {
 	this.players.forEach((player) => {
 		player.cards.push(this.cards.pop());
 		player.cards.push(this.cards.pop());
-	});
 
-	this.playerNext = this.players[this.turnNumber % this.players.length];
+		player.hasFold = false;
+	});
 }
 
 exports.drawCard = () => {
+	this.cards.pop();
+
 	if (this.deck.length == 0) {
-		this.cards.push(this.cards.pop());
-		this.cards.push(this.cards.pop());
+		this.deck.push(this.cards.pop());
+		this.deck.push(this.cards.pop());
 	}
 
-	this.cards.push(this.cards.pop());
+	this.deck.push(this.cards.pop());
+
+	this.indexPlayerNext = this.indexFirstPlayer;
 }
 
 exports.addBetsToPot = () => {
 	this.players.forEach(player => {
 		this.pot += player.bet;
 		player.bet = 0;
+		player.played = false;
 	});
+
+	this.maxBet = 0;
 }
 
 
 // PLAYER ACTIONS
-exports.bet = (player, amount) => {
-	if (player == this.playerNext || player.money >= amount || amount >= this.maxBet) {
-		player.money -= amount;
-		player.bet += amount;
+exports.bet = (player, betAmount) => {
+	let playerNext = this.players[this.indexPlayerNext];
+
+	let amount = parseInt(betAmount)+parseInt(player.bet);
+
+	if (player == playerNext && player.money >= amount && amount >= this.maxBet) {
+		player.money -= amount-player.bet;
+		player.bet = amount;
 
 		if (amount > this.maxBet)
 			this.maxBet = amount;
 
-		let idPlayerNext = (this.turnNumber % this.players.length)+1;
-		if (idPlayerNext >= this.players.length)
-			idPlayerNext = 0;
+		player.played = true;
+		this.setNextPlayer();
+	}
+}
 
-		this.playerNext = this.players[idPlayerNext];
-		if (this.playerNext.bet) {
-			if (this.deck.length == 5) // IF GAME ENDED
-				this.showCards = true;
-			else {
-				this.addBetsToPot();
-			}
+exports.setNextPlayer = () => {
+	this.indexPlayerNext = ((this.indexPlayerNext+1) % this.players.length);
+
+	let playerNext = this.players[this.indexPlayerNext];
+
+	if (!playerNext.cards) { // IF PLAYER DOESN'T HAVE CARD
+		this.setNextPlayer();
+		return;
+	}
+
+	if (playerNext.bet == this.maxBet && playerNext.played) { // IF EVERYONE PLAYED
+		if (this.deck.length == 5) { // IF GAME ENDED
+			this.indexPlayerNext = -1;
+			this.showCards = true;
+		} else {
+			this.addBetsToPot();
+			this.drawCard();
 		}
 	}
 }
 
 exports.fold = (username) => {
-
+	this.getPlayer(username).cards = [];
+	this.getPlayer(username).hasFold = true;
 }
 
 
 // OTHERS ACTIONS
 exports.getGameInfo = (username) => {
 	let player = this.getPlayer(username);
+	let yourTurn;
+
+	try {
+		yourTurn = (player.username == this.players[this.indexPlayerNext].username)
+	} catch (err) {
+		yourTurn = false;
+	}
 
 	let data = {
 		"game": {
-			"deck": [],
+			"deck": this.deck,
 			"pot": this.pot,
-			"maxBet": this.maxBet
 		},
 		"player": {
 			"cards": player.cards,
 			"bet": player.bet,
 			"money": player.money,
-			"yourTurn": (player.username == this.playerNext.username)
+			"fold": player.hasFold,
+			"yourTurn": yourTurn
 		},
 		"opponents": []
 	};
@@ -150,12 +182,13 @@ exports.getGameInfo = (username) => {
 		let cards;
 
 		if (this.showCards)
-			cards = players.cards;
+			cards = player.cards;
 
 		data.opponents.push({ // HAVE TO APPEND PLAYER
 			"username": player.username,
 			"bet": player.bet,
-			"cards": cards
+			"cards": cards,
+			"fold": player.hasFold
 		});
 
 		i++;

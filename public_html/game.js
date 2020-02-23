@@ -1,29 +1,24 @@
-var lBet, lMoney;
+var lPot, lBet, lMoney;
 var firstCard, secondCard;
-var deck, opponent1, opponent2, opponent3;
 
 function init() {
+	lPot = document.getElementById("pot");
 	lBet = document.getElementById("bet");
 	lMoney = document.getElementById("money");
 
 	firstCard = document.getElementById('firstCard');
 	secondCard = document.getElementById('secondCard');
 
-	deck = document.getElementById('deck');
-	opponent1 = document.getElementById('opponent1');
-	opponent2 = document.getElementById('opponent2');
-	opponent3 = document.getElementById('opponent3');
-
-	opponent1.style.display = "none";
-	opponent2.style.display = "none";
-	opponent3.style.display = "none";
+	document.getElementById('opponent1').style.display = "none";
+	document.getElementById('opponent2').style.display = "none";
+	document.getElementById('opponent3').style.display = "none";
 
 	setInterval(update, 500);
 }
 
 function update() {
 	// XHR REQUEST TO /update
-	var xhr = new XMLHttpRequest();
+	let xhr = new XMLHttpRequest();
 	xhr.open("GET", "/update");
 	xhr.send();
 
@@ -31,11 +26,18 @@ function update() {
 		if (xhr.readyState == 4 && xhr.status == 200) {
 			let data = JSON.parse(xhr.responseText);
 
+			lPot.innerHTML = data.game.pot;
+
 			lBet.innerHTML = data.player.bet;
 			lMoney.innerHTML = data.player.money;
 
-			firstCard.src = "resources/" + getSuit(data.player.cards[0].suit) + "/" + getRank(data.player.cards[0].rank) + ".png";
-			secondCard.src = "resources/" + getSuit(data.player.cards[1].suit) + "/" + getRank(data.player.cards[1].rank) + ".png";
+			if (data.player.cards.length != 0) {
+				firstCard.src = "resources/" + getSuit(data.player.cards[0].suit) + "/" + getRank(data.player.cards[0].rank) + ".png";
+				secondCard.src = "resources/" + getSuit(data.player.cards[1].suit) + "/" + getRank(data.player.cards[1].rank) + ".png";
+			} else {
+				firstCard.src = "";
+				secondCard.src = "";
+			}
 		
 			for (let i = 0; i < data.opponents.length; i++) {
 				let opponent = document.getElementById('opponent'+(i+1));
@@ -43,7 +45,10 @@ function update() {
 				opponent.getElementsByTagName('label')[0].innerHTML = data.opponents[i].username;
 				opponent.getElementsByTagName('label')[1].innerHTML = data.opponents[i].bet;
 
-				if (data.cards) {
+				if (data.opponents[i].fold) {
+					document.getElementById('firstCardOpponent'+(i+1)).src = "";
+					document.getElementById('secondCardOpponent'+(i+1)).src = "";
+				} else if (data.opponents[i].cards) {
 					let opponentFirstCard = data.opponents[i].cards[0];
 					let opponentSecondCard = data.opponents[i].cards[1];
 
@@ -58,6 +63,12 @@ function update() {
 			for (let i = 0; i < 4; i++) {
 				document.getElementById('player').getElementsByTagName('input')[i].disabled = !data.player.yourTurn;
 			}
+
+			let deck = data.game.deck;
+
+			for (let i = 0; i < deck.length; i++) {
+				document.getElementById('deckCard'+(i+1)).src = "resources/" + getSuit(deck[i].suit) + "/" + getRank(deck[i].rank) + ".png";
+			}
 		}
 		else if (xhr.readyState == 4 && xhr.status == 400) {
 			document.location.href = "/connect?error=3";
@@ -66,15 +77,40 @@ function update() {
 }
 
 function fold() {
+	let xhr = new XMLHttpRequest();
+	xhr.open("GET", "/fold");
+	xhr.send();
 
+	update();
 }
 
 function check() {
+	let xhr = new XMLHttpRequest();
+	xhr.open("GET", "/check");
+	xhr.send();
 
+	update();
 }
 
 function raise() {
-	
+	let raiseAmount = document.getElementById('raiseAmount');
+
+	if (raiseAmount.value == "")
+		return;
+
+	let xhr = new XMLHttpRequest();
+	xhr.open("GET", "/raise/" + raiseAmount.value);
+	xhr.send();
+
+	raiseAmount.value = "";
+
+	update();
+}
+
+function quit() {
+	let xhr = new XMLHttpRequest();
+	xhr.open("GET", "/quit");
+	xhr.send();
 }
 
 

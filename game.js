@@ -1,5 +1,6 @@
 var Card = require('./card.js');
 var Player = require('./player.js');
+var CardsEvalution = require('./cardsEvaluation.js');
 
 const PLAYER_LIMIT = 4;
 const PLAYER_MIN = 2;
@@ -104,6 +105,11 @@ exports.addBetsToPot = () => {
 
 
 // PLAYER ACTIONS
+exports.fold = (username) => {
+	this.getPlayer(username).cards = [];
+	this.getPlayer(username).hasFold = true;
+}
+
 exports.bet = (player, betAmount) => {
 	let playerNext = this.players[this.indexPlayerNext];
 
@@ -121,34 +127,32 @@ exports.bet = (player, betAmount) => {
 	}
 }
 
+
+// OTHERS ACTIONS
 exports.setNextPlayer = () => {
 	this.indexPlayerNext = ((this.indexPlayerNext+1) % this.players.length);
 
 	let playerNext = this.players[this.indexPlayerNext];
 
-	if (!playerNext.cards) { // IF PLAYER DOESN'T HAVE CARD
+	if (playerNext.hasFold) { // IF PLAYER DOESN'T HAVE CARDS
 		this.setNextPlayer();
 		return;
 	}
+
+	this.addBetsToPot();
 
 	if (playerNext.bet == this.maxBet && playerNext.played) { // IF EVERYONE PLAYED
 		if (this.deck.length == 5) { // IF GAME ENDED
 			this.indexPlayerNext = -1;
 			this.showCards = true;
+			this.inRound = false;
+			// this.getBestDeck();
 		} else {
-			this.addBetsToPot();
 			this.drawCard();
 		}
 	}
 }
 
-exports.fold = (username) => {
-	this.getPlayer(username).cards = [];
-	this.getPlayer(username).hasFold = true;
-}
-
-
-// OTHERS ACTIONS
 exports.getGameInfo = (username) => {
 	let player = this.getPlayer(username);
 	let yourTurn;
@@ -161,8 +165,12 @@ exports.getGameInfo = (username) => {
 
 	let data = {
 		"game": {
+			"status": {
+				"canStart": (!this.inRound && this.players.length >= PLAYER_MIN)
+			},
 			"deck": this.deck,
 			"pot": this.pot,
+			"maxBet": this.maxBet
 		},
 		"player": {
 			"cards": player.cards,
@@ -198,7 +206,21 @@ exports.getGameInfo = (username) => {
 }
 
 exports.getBestDeck = () => {
+	this.players.forEach((player) => {
+		if (!player.hasFold) {
+			let playerHand = [];
+			playerHand.push(player.cards[0]);
+			playerHand.push(player.cards[1]);
 
+			for (let i = 0; i < 5; i++)
+				playerHand.push(this.deck[i]);
+
+			new CardsEvalution(playerHand);
+		}
+	});
+
+	// IN CASE OF HAND LEVEL EQUALITY, CHECK OTHERS CARDS IF POSSIBLE
+	// (impossible to check if double royal flush)
 }
 
 

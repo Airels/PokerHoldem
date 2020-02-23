@@ -37,8 +37,12 @@ app.get('/play', (req, res) => {
 	};
 
 	res.render('game', data);
+});
 
+app.get('/start', (req, res) => {
 	game.startRound();
+
+	res.end();
 });
 
 app.get('/update', (req, res) => {

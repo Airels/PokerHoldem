@@ -1,11 +1,9 @@
-module.exports = function(cards) {
-    console.log(cards);
+module.exports = (cards) => {
     cards.sort((card1, card2) => (card1.rank > card2.rank) ? -1 : 1);
     cards.sort((card1, card2) => (card1.suit > card2.suit) ? -1 : 1);
-    console.log(cards);
 
     if (isRoyalFlush(cards))
-        return 9
+        return 9;
     if (isStraightFlush(cards))
         return 8;
     if (isFourOfAKind(cards))
@@ -87,7 +85,7 @@ function isFullHouse(cards) { // 6
     let tempCards = [].concat(cards);
 
     for (let i = 0; i < 5; i++) {
-        if (tempCards[i].rank == cartempCardsds[i+1].rank && tempCards[i].rank == tempCards[i+2].rank) {
+        if (tempCards[i].rank == tempCards[i+1].rank && tempCards[i].rank == tempCards[i+2].rank) {
             tempCards.splice(i, 3);
 
             return isPair(tempCards);

@@ -61,7 +61,7 @@ function isStraightFlush(cards) { // 8
     for (let i = 0; i < 3; i++) {
         if (cards[i].suit == cards[i+1].suit) {
             for (let j = i; j < i+4; j++) {
-                if (((cards[i].rank - cards[i+1].rank) != 1) || (cards[i].suit != cards[i+1].suit))
+                if (((cards[j].rank - cards[j+1].rank) != 1) || (cards[j].suit != cards[j+1].suit))
                     return false;
             }
 
@@ -73,6 +73,8 @@ function isStraightFlush(cards) { // 8
 }
 
 function isFourOfAKind(cards) { // 7
+    cards.sort((card1, card2) => (card1.rank > card2.rank) ? -1 : 1);
+
     for (let i = 0; i < 4; i++) {
         if (cards[i].rank == cards[i+1].rank && cards[i].rank == cards[i+2].rank && cards[i].rank == cards[i+3].rank)
             return true;
@@ -96,10 +98,12 @@ function isFullHouse(cards) { // 6
 }
 
 function isFlush(cards) { // 5
+    cards.sort((card1, card2) => (card1.suit > card2.suit) ? -1 : 1);
+
     for (let i = 0; i < 3; i++) {
         if (cards[i].suit == cards[i+1].suit) {
-            for (let j = (i+1); j < i+5; j++) {
-                if (cards[i].suit != cards[i+1].suit)
+            for (let j = (i+1); j < i+3; j++) {
+                if (cards[j].suit != cards[j+1].suit)
                     return false;
             }
 
@@ -109,10 +113,12 @@ function isFlush(cards) { // 5
 }
 
 function isStraight(cards) { // 4
+    cards.sort((card1, card2) => (card1.rank > card2.rank) ? -1 : 1);
+
     for (let i = 0; i < 3; i++) {
         if (cards[i].rank - cards[i+1].rank == 1) {
             for (let j = (i+1); j < i+4; j++) {
-                if ((cards[i].rank - cards[i+1].rank) != 1)
+                if ((cards[j].rank - cards[j+1].rank) != 1)
                     return false;
             }
 
@@ -124,6 +130,8 @@ function isStraight(cards) { // 4
 }
 
 function isThreeOfAKind(cards) { // 3
+    cards.sort((card1, card2) => (card1.rank > card2.rank) ? -1 : 1);
+
     for (let i = 0; i < 5; i++) {
         if (cards[i].rank == cards[i+1].rank && cards[i].rank == cards[i+2].rank)
             return true;
@@ -133,13 +141,13 @@ function isThreeOfAKind(cards) { // 3
 }
 
 function isTwoPairs(cards) { // 2
-    let tempCards = [];
+    let tempCards = [].concat(cards);
 
-    for (let i = 0; i < 5; i++) {
-        if (tempCards[i].rank == tempCards[i+1].rank && tempCards[i].rank == tempCards[i+2].rank) {
+    for (let i = 0; i < 6; i++) {
+        if (tempCards[i].rank == tempCards[i+1].rank) {
             tempCards.splice(i, 2);
 
-            return isPair(cards);
+            return isPair(tempCards);
         }
     }
 
@@ -147,7 +155,7 @@ function isTwoPairs(cards) { // 2
 }
 
 function isPair(cards) { // 1
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < cards.length-1; i++) {
         if (cards[i].rank == cards[i+1].rank)
             return true;
     }

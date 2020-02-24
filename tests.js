@@ -39,7 +39,6 @@ function testThreeOfAKind() {
 function testTwoPairs() {
     let cards = [new Card(3, 1), new Card(1, 3), new Card(3, 2), new Card(9, 1), new Card(11, 1), new Card(11, 0), new Card(0, 3)];
     console.assert(handsResolver(cards) == 2);
-    console.log(handsResolver(cards));
 }
 
 function testPair() {
@@ -60,6 +59,6 @@ testFullHouse();
 testFlush();
 testStraight();
 testThreeOfAKind();
-// testTwoPairs();
+testTwoPairs();
 testPair();
 testHighCard();

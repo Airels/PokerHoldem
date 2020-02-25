@@ -2,8 +2,8 @@ var Card = require('./card.js');
 var Player = require('./player.js');
 var getHandLevel = require('./cardsEvaluation.js');
 
-const PLAYER_LIMIT = 4;
-const PLAYER_MIN = 2;
+const PLAYER_LIMIT = 4; // MAX: 4 (interface not adapted to more)
+const PLAYER_MIN = 2; // MIN: 2 (if 1, errors may appear)
 
 
 exports.createGame = () => {

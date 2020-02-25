@@ -78,10 +78,10 @@ function update() {
 				document.getElementById('player').getElementsByTagName('input')[i].disabled = !data.player.yourTurn;
 			}
 
-			let raiseAmountText = document.getElementById('raiseAmount');
+			/* let raiseAmountText = document.getElementById('raiseAmount');
 
 			if (data.player.yourTurn && raiseAmountText.value < data.game.maxBet && raiseAmountText.value == "")
-				raiseAmountText.value = data.game.maxBet - data.player.bet;
+				raiseAmountText.value = data.game.maxBet - data.player.bet; */
 
 			let deck = data.game.deck;
 

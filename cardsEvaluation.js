@@ -2,26 +2,44 @@ module.exports = (cards) => {
     cards.sort((card1, card2) => (card1.rank > card2.rank) ? -1 : 1);
     cards.sort((card1, card2) => (card1.suit > card2.suit) ? -1 : 1);
 
-    if (isRoyalFlush(cards))
-        return 9;
-    if (isStraightFlush(cards))
-        return 8;
-    if (isFourOfAKind(cards))
-        return 7;
-    if (isFullHouse(cards))
-        return 6;
-    if (isFlush(cards))
-        return 5;
-    if (isStraight(cards))
-        return 4;
-    if (isThreeOfAKind(cards))
-        return 3;
-    if (isTwoPairs(cards))
-        return 2;
-    if (isPair(cards))
-        return 1;
+    let handResult;
 
-    return 0;
+    if (isRoyalFlush(cards))
+        return {"handLevel": 9, "bestCard": 12};
+
+    handResult = isStraightFlush(cards);
+    if (handResult)
+        return handResult;
+
+    handResult = isFourOfAKind(cards);
+    if (isFourOfAKind(cards))
+        return handResult;
+
+    handResult = isFullHouse(cards);
+    if (isFullHouse(cards))
+        return handResult;
+
+    handResult = isFlush(cards);
+    if (isFlush(cards))
+        return handResult;
+
+    handResult = isStraight(cards);
+    if (isStraight(cards))
+        return handResult;
+
+    handResult = isThreeOfAKind(cards);
+    if (isThreeOfAKind(cards))
+        return handResult;
+
+    handResult = isTwoPairs(cards);
+    if (isTwoPairs(cards))
+        return handResult;
+
+    handResult = isPair(cards);
+    if (isPair(cards))
+        return handResult;
+
+    return getHighestCard(cards);
 }
 
 /*
@@ -65,7 +83,7 @@ function isStraightFlush(cards) { // 8
                     return false;
             }
 
-            return true;
+            return {"handLevel": 8, "bestCard": cards[i].rank};
         }
     }
 
@@ -77,7 +95,7 @@ function isFourOfAKind(cards) { // 7
 
     for (let i = 0; i < 4; i++) {
         if (cards[i].rank == cards[i+1].rank && cards[i].rank == cards[i+2].rank && cards[i].rank == cards[i+3].rank)
-            return true;
+            return {"handLevel": 7, "bestCard": cards[i].rank};
     }
 
     return false;
@@ -87,10 +105,15 @@ function isFullHouse(cards) { // 6
     let tempCards = [].concat(cards);
 
     for (let i = 0; i < 5; i++) {
-        if (tempCards[i].rank == tempCards[i+1].rank && tempCards[i].rank == tempCards[i+2].rank) {
+        if (cards[i].rank == cards[i+1].rank && cards[i].rank == tempCards[i+2].rank) {
             tempCards.splice(i, 3);
 
-            return isPair(tempCards);
+            let pairResult = isPair(tempCards);
+            
+            if (pairResult)
+                return {"handLevel": 6, bestCard: cards[i].rank}
+            
+            return false;
         }
     }
 
@@ -107,7 +130,7 @@ function isFlush(cards) { // 5
                     return false;
             }
 
-            return true;
+            return {"handLevel": 5, "bestCard": cards[i].rank};
         }
     }
 }
@@ -122,7 +145,7 @@ function isStraight(cards) { // 4
                     return false;
             }
 
-            return true;
+            return {"handLevel": 4, "bestCard": cards[i].rank};
         }
     }
 
@@ -134,7 +157,7 @@ function isThreeOfAKind(cards) { // 3
 
     for (let i = 0; i < 5; i++) {
         if (cards[i].rank == cards[i+1].rank && cards[i].rank == cards[i+2].rank)
-            return true;
+            return {"handLevel": 3, "bestCard": cards[i].rank};
     }
 
     return false;
@@ -143,11 +166,16 @@ function isThreeOfAKind(cards) { // 3
 function isTwoPairs(cards) { // 2
     let tempCards = [].concat(cards);
 
-    for (let i = 0; i < 6; i++) {
-        if (tempCards[i].rank == tempCards[i+1].rank) {
+    for (let i = 0; i < 5; i++) {
+        if (tempCards[i].rank == tempCards[i+1].rank) {            
             tempCards.splice(i, 2);
 
-            return isPair(tempCards);
+            let pairResult = isPair(tempCards);
+
+            if (pairResult)
+                return {"handLevel": 2, "bestCard": ((cards[i].rank > pairResult.bestCard) ? cards[i].rank : pairResult.bestCard) }
+
+            return false;
         }
     }
 
@@ -157,12 +185,12 @@ function isTwoPairs(cards) { // 2
 function isPair(cards) { // 1
     for (let i = 0; i < cards.length-1; i++) {
         if (cards[i].rank == cards[i+1].rank)
-            return true;
+            return {"handLevel": 1, "bestCard": cards[i].rank};
     }
 
     return false;
 }
 
 function getHighestCard(cards) { // 0
-    return cards[0];
+    return {"handLevel": 0, "bestCard": cards[0].rank}
 }

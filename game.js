@@ -1,6 +1,6 @@
 var Card = require('./card.js');
 var Player = require('./player.js');
-var CardsEvalution = require('./cardsEvaluation.js');
+var getHandLevel = require('./cardsEvaluation.js');
 
 const PLAYER_LIMIT = 4;
 const PLAYER_MIN = 2;
@@ -46,7 +46,20 @@ exports.addPlayer = (username) => {
 // GAME ACTIONS
 exports.startRound = () => {
 	if (!this.inRound && this.players.length >= PLAYER_MIN) {
+		this.turnNumber++;
+
 		this.inRound = true;
+
+		this.cards = [];
+		this.deck = [];
+		this.showCards = false;
+
+		this.players.forEach((player) => {
+			player.cards = [];
+			player.played = false;
+			player.hasFold = false;
+		});
+
 		this.generateCards();
 		this.shuffle();
 		this.distribute();
@@ -139,17 +152,17 @@ exports.setNextPlayer = () => {
 		return;
 	}
 
-	this.addBetsToPot();
-
 	if (playerNext.bet == this.maxBet && playerNext.played) { // IF EVERYONE PLAYED
 		if (this.deck.length == 5) { // IF GAME ENDED
 			this.indexPlayerNext = -1;
 			this.showCards = true;
+			this.getBestDeck();
 			this.inRound = false;
-			// this.getBestDeck();
 		} else {
 			this.drawCard();
 		}
+
+		this.addBetsToPot();
 	}
 }
 
@@ -206,6 +219,9 @@ exports.getGameInfo = (username) => {
 }
 
 exports.getBestDeck = () => {
+	let winners = [];
+	let bestHands = [];
+
 	this.players.forEach((player) => {
 		if (!player.hasFold) {
 			let playerHand = [];
@@ -215,12 +231,36 @@ exports.getBestDeck = () => {
 			for (let i = 0; i < 5; i++)
 				playerHand.push(this.deck[i]);
 
-			new CardsEvalution(playerHand);
+			let handLevel = getHandLevel(playerHand);
+
+			bestHands.push({
+				"player": player,
+				"handLevel": handLevel
+			});
+		} else {
+			bestHands.push({
+				"player": player,
+				"handLevel": -1
+			});
 		}
 	});
 
-	// IN CASE OF HAND LEVEL EQUALITY, CHECK OTHERS CARDS IF POSSIBLE
-	// (impossible to check if double royal flush)
+	bestHands.sort((hand1, hand2) => hand2.handLevel - hand1.handLevel);
+
+	for(let i = 0; i < bestHands.length; i++) {
+		winners.push(bestHands[i].player);
+
+		if (bestHands[i].handLevel > bestHands[i].handLevel)
+			break;
+	}
+
+	let quota = this.pot/winners.length;
+
+	for(let i = 0; i < winners.length; i++) {
+		winners[i].money += quota;
+	}
+
+	this.pot = 0;
 }
 
 

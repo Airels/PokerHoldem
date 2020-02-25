@@ -79,8 +79,11 @@ function update() {
 
 			let deck = data.game.deck;
 
-			for (let i = 0; i < deck.length; i++) {
-				document.getElementById('deckCard'+(i+1)).src = "resources/" + getSuit(deck[i].suit) + "/" + getRank(deck[i].rank) + ".png";
+			for (let i = 0; i < 5; i++) {
+				if (deck[i])
+					document.getElementById('deckCard'+(i+1)).src = "resources/" + getSuit(deck[i].suit) + "/" + getRank(deck[i].rank) + ".png";
+				else
+					document.getElementById('deckCard'+(i+1)).src = "resources/back.png";
 			}
 		}
 		else if (xhr.readyState == 4 && xhr.status == 400) {

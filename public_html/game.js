@@ -114,7 +114,7 @@ function fold() {
 	update();
 }
 
-function check() {
+function checkOrFollow() {
 	let xhr = new XMLHttpRequest();
 	xhr.open("GET", "/check");
 	xhr.send();

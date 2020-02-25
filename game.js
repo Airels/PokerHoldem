@@ -138,6 +138,9 @@ exports.bet = (player, betAmount) => {
 
 	let amount = parseInt(betAmount)+parseInt(player.bet);
 
+	if (betAmount == 0)
+		amount = this.maxBet-parseInt(player.bet);
+
 	if (player == playerNext && player.money >= betAmount && amount >= this.maxBet) {
 		player.money -= amount-player.bet;
 		player.bet = amount;
@@ -173,7 +176,7 @@ exports.setNextPlayer = () => {
 			this.drawCard();
 
 		this.addBetsToPot();
-		
+
 		this.indexPlayerNext = -1;
 		this.showCards = true;
 		this.getBestDeck();

@@ -11,7 +11,7 @@ exports.createGame = () => {
 	this.turnNumber = 0;
 
 	this.players = [];
-	this.indexPlayerNext = 0;
+	this.indexPlayerNext = -1;
 	this.inRound = false;
 
 	this.showCards = false;
@@ -130,6 +130,7 @@ exports.addBetsToPot = () => {
 exports.fold = (username) => {
 	this.getPlayer(username).cards = [];
 	this.getPlayer(username).hasFold = true;
+	this.setNextPlayer();
 }
 
 exports.bet = (player, betAmount) => {
@@ -137,12 +138,18 @@ exports.bet = (player, betAmount) => {
 
 	let amount = parseInt(betAmount)+parseInt(player.bet);
 
-	if (player == playerNext && player.money >= amount && amount >= this.maxBet) {
+	if (player == playerNext && player.money >= betAmount && amount >= this.maxBet) {
 		player.money -= amount-player.bet;
 		player.bet = amount;
 
 		if (amount > this.maxBet)
 			this.maxBet = amount;
+
+		player.played = true;
+		this.setNextPlayer();
+	} else if (player == playerNext && player.money >= amount && player.money < this.maxBet) {
+		player.money -= amount-player.bet;
+		player.bet = amount;
 
 		player.played = true;
 		this.setNextPlayer();
@@ -156,9 +163,19 @@ exports.setNextPlayer = () => {
 
 	let playerNext = this.players[this.indexPlayerNext];
 
-	if (playerNext.hasFold || playerNext.money == 0) { // IF PLAYER DOESN'T HAVE CARDS OR DOESN'T HAVE MONEY
-		this.setNextPlayer();
-		return;
+	try {
+		if (playerNext.hasFold || playerNext.money == 0) { // IF PLAYER DOESN'T HAVE CARDS OR DOESN'T HAVE MONEY
+			this.setNextPlayer();
+			return;
+		}
+	} catch (err) { // stackOverFlow if err, so everyones can't play
+		for (let i = this.deck.length; i <= 5; i++)
+			this.drawCard();
+
+		this.indexPlayerNext = -1;
+		this.showCards = true;
+		this.getBestDeck();
+		this.inRound = false;
 	}
 
 	if (playerNext.bet == this.maxBet && playerNext.played) { // IF EVERYONE PLAYED

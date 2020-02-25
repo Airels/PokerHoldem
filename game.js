@@ -56,7 +56,7 @@ exports.startRound = () => {
 		this.showCards = false;
 
 		this.players.forEach((player) => {
-			player.card = [];
+			player.cards = [];
 			player.played = false;
 			player.hasFold = false;
 		})

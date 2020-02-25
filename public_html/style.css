@@ -1,5 +1,6 @@
 * {
 	text-align: center;
+	font-weight: bold;
 }
 
 body {
@@ -22,7 +23,6 @@ input {
 	bottom: 15px;
 	right: 0;
 
-	margin: 0 600px;
 	padding: 10px 0;
 	border-radius: 50px;
 	background-color: rgb(255, 165, 0, 0);

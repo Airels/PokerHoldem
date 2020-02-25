@@ -4,6 +4,7 @@ var getHandLevel = require('./cardsEvaluation.js');
 
 const PLAYER_LIMIT = 4; // MAX: 4 (interface not adapted to more)
 const PLAYER_MIN = 2; // MIN: 2 (if 1, errors may appear)
+const MIN_BET = 20;
 
 
 exports.createGame = () => {
@@ -59,6 +60,14 @@ exports.startRound = () => {
 			player.played = false;
 			player.hasFold = false;
 		});
+
+		this.players[this.indexPlayerNext].bet = MIN_BET;
+		this.players[this.indexPlayerNext].money -= MIN_BET;
+		this.setNextPlayer();
+		
+		this.players[this.indexPlayerNext].bet = MIN_BET/2;
+		this.players[this.indexPlayerNext].money -= MIN_BET/2;
+		this.setNextPlayer();
 
 		this.generateCards();
 		this.shuffle();

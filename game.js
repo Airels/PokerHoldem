@@ -56,10 +56,10 @@ exports.startRound = () => {
 		this.showCards = false;
 
 		this.players.forEach((player) => {
-			player.cards = [];
+			player.card = [];
 			player.played = false;
 			player.hasFold = false;
-		});
+		})
 
 		this.players[this.indexPlayerNext].bet = MIN_BET;
 		this.players[this.indexPlayerNext].money -= MIN_BET;
@@ -154,7 +154,7 @@ exports.setNextPlayer = () => {
 
 	let playerNext = this.players[this.indexPlayerNext];
 
-	if (playerNext.hasFold) { // IF PLAYER DOESN'T HAVE CARDS
+	if (playerNext.hasFold || playerNext.money == 0) { // IF PLAYER DOESN'T HAVE CARDS OR DOESN'T HAVE MONEY
 		this.setNextPlayer();
 		return;
 	}
@@ -267,6 +267,18 @@ exports.getBestDeck = () => {
 	}
 
 	this.pot = 0;
+
+
+	this.kickPlayersWhoLost();
+}
+
+exports.kickPlayersWhoLost = () => {
+	for (let i = 0; i < this.players.length; i++) {
+		let player = this.players[i];
+
+		if (player.money < MIN_BET)
+			this.players.splice(i, 1);
+	}
 }
 
 

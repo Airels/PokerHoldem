@@ -10,7 +10,6 @@ exports.createGame = () => {
 	this.turnNumber = 0;
 
 	this.players = [];
-	this.indexFirstPlayer = 0;
 	this.indexPlayerNext = 0;
 	this.inRound = false;
 
@@ -47,7 +46,7 @@ exports.addPlayer = (username) => {
 exports.startRound = () => {
 	if (!this.inRound && this.players.length >= PLAYER_MIN) {
 		this.turnNumber++;
-		this.indexFirstPlayer = this.turnNumber % this.players.length;
+		this.indexPlayerNext = this.turnNumber % this.players.length;
 
 		this.inRound = true;
 
@@ -103,8 +102,6 @@ exports.drawCard = () => {
 	}
 
 	this.deck.push(this.cards.pop());
-
-	this.indexPlayerNext = this.indexFirstPlayer;
 }
 
 exports.addBetsToPot = () => {

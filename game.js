@@ -166,6 +166,8 @@ exports.setNextPlayer = () => {
 
 	let playerNext = this.players[this.indexPlayerNext];
 
+
+
 	try {
 		if (playerNext.hasFold || playerNext.money == 0) { // IF PLAYER DOESN'T HAVE CARDS OR DOESN'T HAVE MONEY
 			this.setNextPlayer();
@@ -181,6 +183,8 @@ exports.setNextPlayer = () => {
 		this.showCards = true;
 		this.getBestDeck();
 		this.inRound = false;
+
+		return;
 	}
 
 	if (playerNext.bet == this.maxBet && playerNext.played) { // IF EVERYONE PLAYED
@@ -286,6 +290,19 @@ exports.getBestDeck = () => {
 	}
 
 	console.log(winners);
+	console.log(bestHands);
+
+	if (winners.length > 1) { // CHECK 2nd CARD IN CASE OF EQUALITY
+		for (let i = 0; i < winners.length-1; i++) {
+			winners[i].cards.sort((card1, card2) => (card1.rank > card2.rank) ? -1 : 1);
+			winners[i+1].cards.sort((card1, card2) => (card1.rank > card2.rank) ? -1 : 1);
+
+			if (winners[i].cards[1].rank < winners[i+1].cards[1].rank)
+				winners.splice(i, 1);
+			else if (winners[i].cards[1].rank > winners[i+1].cards[1].rank)
+				winners.splice(i+1, 1);
+		}
+	}
 
 	let quota = this.pot/winners.length;
 

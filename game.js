@@ -172,6 +172,8 @@ exports.setNextPlayer = () => {
 		for (let i = this.deck.length; i <= 5; i++)
 			this.drawCard();
 
+		this.addBetsToPot();
+		
 		this.indexPlayerNext = -1;
 		this.showCards = true;
 		this.getBestDeck();

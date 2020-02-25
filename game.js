@@ -281,9 +281,11 @@ exports.getBestDeck = () => {
 	winners.push(bestHands[0].player);
 
 	for(let i = 0; i < bestHands.length-1; i++) {
-		if (bestHands[i+1].handLevel == bestHands[i].handLevel && bestHands[i+1].bestCard == bestHands)
+		if (bestHands[i+1].handLevel == bestHands[i].handLevel && bestHands[i+1].bestCard == bestHands[i+1].bestCard)
 			winners.push(bestHands[i+1].player);
 	}
+
+	console.log(winners);
 
 	let quota = this.pot/winners.length;
 

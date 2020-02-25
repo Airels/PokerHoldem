@@ -47,6 +47,7 @@ exports.addPlayer = (username) => {
 exports.startRound = () => {
 	if (!this.inRound && this.players.length >= PLAYER_MIN) {
 		this.turnNumber++;
+		this.indexFirstPlayer = this.turnNumber % this.players.length;
 
 		this.inRound = true;
 
@@ -195,7 +196,6 @@ exports.getGameInfo = (username) => {
 		"opponents": []
 	};
 
-	let i = 0;
 	this.players.forEach(player => {
 		if (player.username == username)
 			return;
@@ -211,8 +211,6 @@ exports.getGameInfo = (username) => {
 			"cards": cards,
 			"fold": player.hasFold
 		});
-
-		i++;
 	});
 
 	return data;
@@ -231,11 +229,12 @@ exports.getBestDeck = () => {
 			for (let i = 0; i < 5; i++)
 				playerHand.push(this.deck[i]);
 
-			let handLevel = getHandLevel(playerHand);
+			let handInfos = getHandLevel(playerHand);
 
 			bestHands.push({
 				"player": player,
-				"handLevel": handLevel
+				"handLevel": handInfos.handLevel,
+				"bestCard": handInfos.bestCard
 			});
 		} else {
 			bestHands.push({
@@ -245,13 +244,14 @@ exports.getBestDeck = () => {
 		}
 	});
 
+	bestHands.sort((hand1, hand2) => hand2.bestCard - hand1.bestCard);
 	bestHands.sort((hand1, hand2) => hand2.handLevel - hand1.handLevel);
 
-	for(let i = 0; i < bestHands.length; i++) {
-		winners.push(bestHands[i].player);
+	winners.push(bestHands[0].player);
 
-		if (bestHands[i].handLevel > bestHands[i].handLevel)
-			break;
+	for(let i = 0; i < bestHands.length-1; i++) {
+		if (bestHands[i+1].handLevel == bestHands[i].handLevel && bestHands[i+1].bestCard == bestHands)
+			winners.push(bestHands[i+1].player);
 	}
 
 	let quota = this.pot/winners.length;

@@ -39,6 +39,7 @@ function update() {
 			lBet.innerHTML = data.player.bet;
 			lMoney.innerHTML = data.player.money;
 
+
 			if (data.player.cards.length != 0) {
 				firstCard.src = "resources/" + getSuit(data.player.cards[0].suit) + "/" + getRank(data.player.cards[0].rank) + ".png";
 				secondCard.src = "resources/" + getSuit(data.player.cards[1].suit) + "/" + getRank(data.player.cards[1].rank) + ".png";
@@ -74,7 +75,7 @@ function update() {
 				}
 			}
 
-			for (let i = 0; i < 4; i++) {
+			for (let i = 0; i < 5; i++) {
 				document.getElementById('player').getElementsByTagName('input')[i].disabled = !data.player.yourTurn;
 			}
 
@@ -135,6 +136,12 @@ function raise() {
 	raiseAmount.value = "";
 
 	update();
+}
+
+function allIn() {
+	document.getElementById('raiseAmount').value = lMoney.innerHTML;
+
+	raise();
 }
 
 function quit() {

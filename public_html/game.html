@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 	<head>
-		<title>Poker HoldEm - {{username}}</title>
+		<title>Poker Hold'Em - {{username}}</title>
 		<meta charset="utf-8" />
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<script type="text/javascript" src="game.js"></script>
@@ -36,7 +36,7 @@
 
 			<input type="button" value="Fold" onclick="fold()" />
 			<input type="button" value="Check" onclick="check()" />
-			<input type="button" value="Raise" onclick="raise()" />
+			<input type="button" value="Raise/Follow" onclick="raise()" />
 			<input type="number" id="raiseAmount" placeholder="Raise amount" />
 		</div>
 
@@ -47,7 +47,8 @@
 				<br />
 
 			Username: <label></label> <br />
-			Bet : <label></label>
+			Bet: <label></label> <br />
+			Money: <label></label>
 		</div>
 
 		<div id="opponent2">
@@ -57,7 +58,8 @@
 			<br />
 
 			Username: <label></label> <br />
-			Bet : <label></label>
+			Bet: <label></label> <br />
+			Money: <label></label>
 		</div>
 
 		<div id="opponent3">
@@ -67,7 +69,8 @@
 			<br />
 
 			Username: <label></label> <br />
-			Bet : <label></label>
+			Bet: <label></label> <br />
+			Money: <label></label>
 		</div>
 	</body>
 </html>

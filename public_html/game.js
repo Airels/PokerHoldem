@@ -47,24 +47,30 @@ function update() {
 				secondCard.src = "";
 			}
 		
-			for (let i = 0; i < data.opponents.length; i++) {
+			for (let i = 0; i < 3; i++) {
 				let opponent = document.getElementById('opponent'+(i+1));
-				opponent.style.display = "";
-				opponent.getElementsByTagName('label')[0].innerHTML = data.opponents[i].username;
-				opponent.getElementsByTagName('label')[1].innerHTML = data.opponents[i].bet;
 
-				if (data.opponents[i].fold) {
-					document.getElementById('firstCardOpponent'+(i+1)).src = "";
-					document.getElementById('secondCardOpponent'+(i+1)).src = "";
-				} else if (data.opponents[i].cards) {
-					let opponentFirstCard = data.opponents[i].cards[0];
-					let opponentSecondCard = data.opponents[i].cards[1];
+				if (typeof data.opponents[i] != 'undefined') {
+					opponent.style.display = "";
+					opponent.getElementsByTagName('label')[0].innerHTML = data.opponents[i].username;
+					opponent.getElementsByTagName('label')[1].innerHTML = data.opponents[i].bet;
+					opponent.getElementsByTagName('label')[2].innerHTML = data.opponents[i].money;
 
-					document.getElementById('firstCardOpponent'+(i+1)).src = "resources/" + getSuit(opponentFirstCard.suit) + "/" + getRank(opponentFirstCard.rank) + ".png";
-					document.getElementById('secondCardOpponent'+(i+1)).src = "resources/" + getSuit(opponentSecondCard.suit) + "/" + getRank(opponentSecondCard.rank) + ".png";
+					if (data.opponents[i].fold) {
+						document.getElementById('firstCardOpponent'+(i+1)).src = "";
+						document.getElementById('secondCardOpponent'+(i+1)).src = "";
+					} else if (data.opponents[i].cards) {
+						let opponentFirstCard = data.opponents[i].cards[0];
+						let opponentSecondCard = data.opponents[i].cards[1];
+	
+						document.getElementById('firstCardOpponent'+(i+1)).src = "resources/" + getSuit(opponentFirstCard.suit) + "/" + getRank(opponentFirstCard.rank) + ".png";
+						document.getElementById('secondCardOpponent'+(i+1)).src = "resources/" + getSuit(opponentSecondCard.suit) + "/" + getRank(opponentSecondCard.rank) + ".png";
+					} else {
+						document.getElementById('firstCardOpponent'+(i+1)).src = 'resources/back.png';
+						document.getElementById('secondCardOpponent'+(i+1)).src = 'resources/back.png';
+					}
 				} else {
-					document.getElementById('firstCardOpponent'+(i+1)).src = 'resources/back.png';
-					document.getElementById('secondCardOpponent'+(i+1)).src = 'resources/back.png';
+					opponent.style.display = "none";
 				}
 			}
 

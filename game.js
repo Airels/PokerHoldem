@@ -69,6 +69,8 @@ exports.startRound = () => {
 		this.players[this.indexPlayerNext].money -= MIN_BET/2;
 		this.setNextPlayer();
 
+		this.maxBet = MIN_BET;
+
 		this.generateCards();
 		this.shuffle();
 		this.distribute();
@@ -215,7 +217,8 @@ exports.getGameInfo = (username) => {
 			"username": player.username,
 			"bet": player.bet,
 			"cards": cards,
-			"fold": player.hasFold
+			"fold": player.hasFold,
+			"money": player.money
 		});
 	});
 

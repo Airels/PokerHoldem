@@ -139,7 +139,7 @@ exports.bet = (player, betAmount) => {
 	let amount = parseInt(betAmount)+parseInt(player.bet);
 
 	if (betAmount == 0)
-		amount = this.maxBet-parseInt(player.bet);
+		amount = this.maxBet;
 
 	if (player == playerNext && player.money >= betAmount && amount >= this.maxBet) {
 		player.money -= amount-player.bet;

@@ -29,6 +29,7 @@ function testFlush() {
     let cards = [new Card(3, 1), new Card(5, 1), new Card(7, 1), new Card(9, 1), new Card(11, 1), new Card(11, 0), new Card(0, 3)];
     console.assert(handsResolver(cards).handLevel == 5);
     console.assert(handsResolver(cards).bestCard == 11);
+    console.log(handsResolver(cards).handLevel);
 }
 
 function testStraight() { // Detects flush, not straight
@@ -72,3 +73,11 @@ testThreeOfAKind();
 testTwoPairs();
 testPair();
 testHighCard();
+
+
+function testFive() {
+    let cards = [new Card(9, 0), new Card(0, 1), new Card(8, 0), new Card(9, 2), new Card(11, 2), new Card(1, 2), new Card(8, 2)]
+    console.assert(handsResolver(cards).handLevel == 2);
+}
+
+testFive();

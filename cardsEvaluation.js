@@ -125,7 +125,7 @@ function isFlush(cards) { // 5
 
     for (let i = 0; i < 3; i++) {
         if (cards[i].suit == cards[i+1].suit) {
-            for (let j = (i+1); j < i+3; j++) {
+            for (let j = i; j < i+4; j++) {
                 if (cards[j].suit != cards[j+1].suit)
                     return false;
             }
@@ -133,6 +133,8 @@ function isFlush(cards) { // 5
             return {"handLevel": 5, "bestCard": cards[i].rank};
         }
     }
+
+    return false;
 }
 
 function isStraight(cards) { // 4

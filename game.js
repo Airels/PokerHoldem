@@ -138,8 +138,12 @@ exports.bet = (player, betAmount) => {
 
 	let amount = parseInt(betAmount)+parseInt(player.bet);
 
-	if (betAmount == 0)
-		amount = this.maxBet;
+	if (betAmount == 0) {
+		if (this.maxBet > player.money)
+			amount = player.money;
+		else
+			amount = this.maxBet;
+	}
 
 	if (player == playerNext && player.money >= betAmount && amount >= this.maxBet) {
 		player.money -= amount-player.bet;
@@ -282,15 +286,14 @@ exports.getBestDeck = () => {
 	bestHands.sort((hand1, hand2) => hand2.bestCard - hand1.bestCard);
 	bestHands.sort((hand1, hand2) => hand2.handLevel - hand1.handLevel);
 
+	console.log(bestHands);
+
 	winners.push(bestHands[0].player);
 
 	for(let i = 0; i < bestHands.length-1; i++) {
 		if (bestHands[i+1].handLevel == bestHands[i].handLevel && bestHands[i+1].bestCard == bestHands[i].bestCard)
 			winners.push(bestHands[i+1].player);
 	}
-
-	console.log(winners);
-	console.log(bestHands);
 
 	if (winners.length > 1) { // CHECK 2nd CARD IN CASE OF EQUALITY
 		for (let i = 0; i < winners.length-1; i++) {
@@ -304,14 +307,19 @@ exports.getBestDeck = () => {
 		}
 	}
 
-	let quota = this.pot/winners.length;
+	if (winners.length > 1) {
+		let quota = this.pot/winners.length;
 
-	for(let i = 0; i < winners.length; i++) {
-		winners[i].money += quota;
+		for(let i = 0; i < winners.length; i++) {
+			winners[i].money += quota;
+		}
+
+		this.pot = 0;
+	} else {
+		console.log(winners[0].username);
+		winners[0].money += this.pot;
+		this.pot = 0;
 	}
-
-	this.pot = 0;
-
 
 	this.kickPlayersWhoLost();
 }

@@ -60,4 +60,5 @@ input {
 
 .cards {
 	width: 150px;
+	max-height: 186px; 
 }

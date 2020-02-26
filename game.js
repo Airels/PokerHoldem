@@ -192,6 +192,8 @@ exports.setNextPlayer = () => {
 	}
 
 	if (playerNext.bet == this.maxBet && playerNext.played) { // IF EVERYONE PLAYED
+		this.addBetsToPot();
+
 		if (this.deck.length == 5) { // IF GAME ENDED
 			this.indexPlayerNext = -1;
 			this.showCards = true;
@@ -200,8 +202,6 @@ exports.setNextPlayer = () => {
 		} else {
 			this.drawCard();
 		}
-
-		this.addBetsToPot();
 	}
 }
 
@@ -286,8 +286,6 @@ exports.getBestDeck = () => {
 	bestHands.sort((hand1, hand2) => hand2.bestCard - hand1.bestCard);
 	bestHands.sort((hand1, hand2) => hand2.handLevel - hand1.handLevel);
 
-	console.log(bestHands);
-
 	winners.push(bestHands[0].player);
 
 	for(let i = 0; i < bestHands.length-1; i++) {
@@ -295,7 +293,7 @@ exports.getBestDeck = () => {
 			winners.push(bestHands[i+1].player);
 	}
 
-	if (winners.length > 1) { // CHECK 2nd CARD IN CASE OF EQUALITY
+	/* if (winners.length > 1) { // CHECK 2nd CARD IN CASE OF EQUALITY
 		for (let i = 0; i < winners.length-1; i++) {
 			winners[i].cards.sort((card1, card2) => (card1.rank > card2.rank) ? -1 : 1);
 			winners[i+1].cards.sort((card1, card2) => (card1.rank > card2.rank) ? -1 : 1);
@@ -305,7 +303,7 @@ exports.getBestDeck = () => {
 			else if (winners[i].cards[1].rank > winners[i+1].cards[1].rank)
 				winners.splice(i+1, 1);
 		}
-	}
+	} */
 
 	if (winners.length > 1) {
 		let quota = this.pot/winners.length;
@@ -313,13 +311,13 @@ exports.getBestDeck = () => {
 		for(let i = 0; i < winners.length; i++) {
 			winners[i].money += quota;
 		}
-
-		this.pot = 0;
 	} else {
 		console.log(winners[0].username);
 		winners[0].money += this.pot;
-		this.pot = 0;
+		console.log(winners[0].money);
 	}
+
+	this.pot = 0;
 
 	this.kickPlayersWhoLost();
 }

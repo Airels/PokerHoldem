@@ -167,17 +167,44 @@ exports.bet = (player, betAmount) => {
 // OTHERS ACTIONS
 exports.setNextPlayer = () => {
 	this.indexPlayerNext = ((this.indexPlayerNext+1) % this.players.length);
-
 	let playerNext = this.players[this.indexPlayerNext];
+	
+	if (playerNext.bet == this.maxBet && playerNext.played) { // IF EVERYONE PLAYED
+		this.addBetsToPot();
 
+		this.allInCheck();
+		this.foldCheck();
 
-
-	try {
-		if (playerNext.hasFold || playerNext.money == 0) { // IF PLAYER DOESN'T HAVE CARDS OR DOESN'T HAVE MONEY
-			this.setNextPlayer();
-			return;
+		if (this.deck.length == 5) { // IF GAME ENDED
+			this.indexPlayerNext = -1;
+			this.showCards = true;
+			this.getBestDeck();
+			this.inRound = false;
+		} else {
+			this.drawCard();
 		}
-	} catch (err) { // stackOverFlow if err, so everyones can't play
+
+		return;
+	}
+
+	this.foldCheck();
+
+	if (playerNext.hasFold || playerNext.money == 0) { // IF PLAYER DOESN'T HAVE CARDS OR DOESN'T HAVE MONEY
+		this.setNextPlayer();
+		return;
+	}
+}
+
+exports.allInCheck = () => {
+	/* CHECK IF PLAYERS ALL IN */
+	let countPlayersAllIn = 0;
+
+	this.players.forEach((player) => {
+		if (player.money == 0)
+			countPlayersAllIn++;
+	});
+
+	if (countPlayersAllIn >= this.players.length-1) {
 		for (let i = this.deck.length; i <= 5; i++)
 			this.drawCard();
 
@@ -190,19 +217,32 @@ exports.setNextPlayer = () => {
 
 		return;
 	}
+	/* END CHECK */
+}
 
-	if (playerNext.bet == this.maxBet && playerNext.played) { // IF EVERYONE PLAYED
+exports.foldCheck = () => {
+	/* CHECK IF PLAYERS FOLD */
+	let countPlayersFold = 0;
+
+	this.players.forEach((player) => {
+		if (player.hasFold)
+			countPlayersFold++;
+	});
+
+	if (countPlayersFold >= this.players.length-1) {
+		for (let i = this.deck.length; i <= 5; i++)
+			this.drawCard();
+
 		this.addBetsToPot();
 
-		if (this.deck.length == 5) { // IF GAME ENDED
-			this.indexPlayerNext = -1;
-			this.showCards = true;
-			this.getBestDeck();
-			this.inRound = false;
-		} else {
-			this.drawCard();
-		}
+		this.indexPlayerNext = -1;
+		this.showCards = true;
+		this.getBestDeck();
+		this.inRound = false;
+
+		return;
 	}
+	/* END CHECK */
 }
 
 exports.getGameInfo = (username) => {
@@ -210,7 +250,7 @@ exports.getGameInfo = (username) => {
 	let yourTurn;
 
 	try {
-		yourTurn = (player.username == this.players[this.indexPlayerNext].username)
+		yourTurn = (player.username == this.players[this.indexPlayerNext].username);
 	} catch (err) {
 		yourTurn = false;
 	}
@@ -306,16 +346,25 @@ exports.getBestDeck = () => {
 	} */
 
 	if (winners.length > 1) {
+		for (let i = 0; i < winners.length-1; i++) {
+			let player1Card = (bestHands[i].bestCard == winners[i].cards[0]) ? winners[i].cards[1] : winners[i].cards[0];
+			let player2Card = (bestHands[i+1].bestCard == winners[i+1].cards[0]) ? winners[i+1].cards[1] : winners[i+1].cards[0];
+
+			if (player1Card.rank > player2Card.rank)
+				winners.splice(i+1, 1);
+			else if (player1Card.rank < player2Card.rank)
+				winners.splice(i, 1);
+		}
+	}
+
+	if (winners.length > 1) {
 		let quota = this.pot/winners.length;
 
 		for(let i = 0; i < winners.length; i++) {
 			winners[i].money += quota;
 		}
-	} else {
-		console.log(winners[0].username);
+	} else
 		winners[0].money += this.pot;
-		console.log(winners[0].money);
-	}
 
 	this.pot = 0;
 

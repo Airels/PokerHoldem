@@ -375,10 +375,7 @@ exports.quitGame = (username) => {
 		if (player.username == username) {
 			this.players.splice(i, 1);
 
-			console.log(this.indexPlayerNext)
-			console.log(i);
-			
-			if (i == this.indexPlayerNext)
+			if (i == this.indexPlayerNext || this.players.length == 1) 
 				this.setNextPlayer();
 		}
 	}

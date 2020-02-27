@@ -332,18 +332,7 @@ exports.getBestDeck = () => {
 			winners.push(bestHands[i+1].player);
 	}
 
-	/* if (winners.length > 1) { // CHECK 2nd CARD IN CASE OF EQUALITY
-		for (let i = 0; i < winners.length-1; i++) {
-			winners[i].cards.sort((card1, card2) => (card1.rank > card2.rank) ? -1 : 1);
-			winners[i+1].cards.sort((card1, card2) => (card1.rank > card2.rank) ? -1 : 1);
-
-			if (winners[i].cards[1].rank < winners[i+1].cards[1].rank)
-				winners.splice(i, 1);
-			else if (winners[i].cards[1].rank > winners[i+1].cards[1].rank)
-				winners.splice(i+1, 1);
-		}
-	} */
-
+	// CHECK OTHER CARD IN CASE OF EQUALITY
 	if (winners.length > 1) {
 		for (let i = 0; i < winners.length-1; i++) {
 			let player1Card = (bestHands[i].bestCard == winners[i].cards[0]) ? winners[i].cards[1] : winners[i].cards[0];
@@ -376,6 +365,22 @@ exports.kickPlayersWhoLost = () => {
 
 		if (player.money < MIN_BET)
 			this.players.splice(i, 1);
+	}
+}
+
+exports.quitGame = (username) => {
+	for (let i = 0; i < this.players.length; i++) {
+		let player = this.players[i];
+
+		if (player.username == username) {
+			this.players.splice(i, 1);
+
+			console.log(this.indexPlayerNext)
+			console.log(i);
+			
+			if (i == this.indexPlayerNext)
+				this.setNextPlayer();
+		}
 	}
 }
 

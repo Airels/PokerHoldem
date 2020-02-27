@@ -84,6 +84,9 @@ app.get('/fold', (req, res) => {
 
 app.get('/quit', (req, res) => {
 	let username = req.cookies.username;
+
+	game.quitGame(username);
+	res.end();
 });
 
 app.post('/connect', (req, res) => {

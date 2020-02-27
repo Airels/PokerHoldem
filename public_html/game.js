@@ -145,12 +145,11 @@ function allIn() {
 	raise();
 }
 
-function quit() {
+window.onbeforeunload = function() {
 	let xhr = new XMLHttpRequest();
 	xhr.open("GET", "/quit");
 	xhr.send();
 }
-
 
 // UTILS
 function getSuit(suitID) {

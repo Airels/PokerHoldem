@@ -83,11 +83,7 @@ function update() {
 				document.getElementById('player').style.backgroundColor = "rgb(255, 165, 0, 0.9)";
 			else
 				document.getElementById('player').style.backgroundColor = "rgb(255, 165, 0, 0)";
-
-			/* let raiseAmountText = document.getElementById('raiseAmount');
-
-			if (data.player.yourTurn && raiseAmountText.value < data.game.maxBet && raiseAmountText.value == "")
-				raiseAmountText.value = data.game.maxBet - data.player.bet; */
+				
 
 			let deck = data.game.deck;
 

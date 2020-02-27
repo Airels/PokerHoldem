@@ -168,12 +168,13 @@ exports.bet = (player, betAmount) => {
 exports.setNextPlayer = () => {
 	this.indexPlayerNext = ((this.indexPlayerNext+1) % this.players.length);
 	let playerNext = this.players[this.indexPlayerNext];
-	
+
+	this.foldCheck();
+
 	if (playerNext.bet == this.maxBet && playerNext.played) { // IF EVERYONE PLAYED
 		this.addBetsToPot();
 
 		this.allInCheck();
-		this.foldCheck();
 
 		if (this.deck.length == 5) { // IF GAME ENDED
 			this.indexPlayerNext = -1;
@@ -186,8 +187,6 @@ exports.setNextPlayer = () => {
 
 		return;
 	}
-
-	this.foldCheck();
 
 	if (playerNext.hasFold || playerNext.money == 0) { // IF PLAYER DOESN'T HAVE CARDS OR DOESN'T HAVE MONEY
 		this.setNextPlayer();
@@ -205,10 +204,10 @@ exports.allInCheck = () => {
 	});
 
 	if (countPlayersAllIn >= this.players.length-1) {
+		this.addBetsToPot();
+
 		for (let i = this.deck.length; i <= 5; i++)
 			this.drawCard();
-
-		this.addBetsToPot();
 
 		this.indexPlayerNext = -1;
 		this.showCards = true;
@@ -230,10 +229,10 @@ exports.foldCheck = () => {
 	});
 
 	if (countPlayersFold >= this.players.length-1) {
+		this.addBetsToPot();
+		
 		for (let i = this.deck.length; i <= 5; i++)
 			this.drawCard();
-
-		this.addBetsToPot();
 
 		this.indexPlayerNext = -1;
 		this.showCards = true;

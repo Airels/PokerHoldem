@@ -3,6 +3,8 @@ const mustache = require('mustache-express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+const SERVER_PORT = 3000;
+
 var game = require('./game.js');
 game.createGame();
 
@@ -109,4 +111,4 @@ app.use((req, res) => {
 });
 
 
-app.listen(3000);
+app.listen(SERVER_PORT);

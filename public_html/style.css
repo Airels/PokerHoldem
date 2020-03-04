@@ -8,7 +8,7 @@ body {
 	background-size: cover;
 }
 
-input {
+/* input {
 	width: 100px;
 }
 
@@ -27,8 +27,8 @@ input {
 	border-radius: 50px;
 	background-color: rgb(255, 165, 0, 0);
 }
-
-#deck {
+*/
+.center-element {
 	position: absolute;
 	left: 0;
 	right: 0;
@@ -38,6 +38,7 @@ input {
 	margin: auto;
 }
 
+/*
 #opponent1 {
 	display: inline-block;
 	position: absolute;
@@ -56,9 +57,8 @@ input {
 	display: inline-block;
 	position: absolute;
 	right: 0;
-}
+} */
 
 .cards {
-	width: 150px;
-	max-height: 186px; 
+	max-width: 150px; 
 }

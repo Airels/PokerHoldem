@@ -4,74 +4,88 @@
 		<title>Poker Hold'Em - {{username}}</title>
 		<meta charset="utf-8" />
 		<link rel="stylesheet" type="text/css" href="style.css" />
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 		<script type="text/javascript" src="game.js"></script>
 	</head>
 
 	<body onload="init()">
-		<div id="deck">
-			Pot : <label id="pot"></label>
+		<div class="container-fluid fixed-top fixed-bottom">
+			<div class="row mt-3">
+				<div class="col" id="opponent1">
+					<div class="container">
+						<img id="firstCardOpponent1" class="col-3 col-md-2 h-100" src="" />
+						<img id="secondCardOpponent1" class="col-3 col-md-2 h-100" src="" />
+					</div>
+		
+					<label></label> <br />
+					Bet: <label></label>
+					Money: <label></label>
+				</div>
+		
+				<div class="col" id="opponent2">
+					<div class="container">
+						<img id="firstCardOpponent2" class="col-3 col-md-2 h-100" src="" />
+						<img id="secondCardOpponent2" class="col-3 col-md-2 h-100" src="" />			
+					</div>
+		
+					<label></label> <br />
+					Bet: <label></label>
+					Money: <label></label>
+				</div>
+		
+				<div class="col" id="opponent3">
+					<div class="container">
+						<img id="firstCardOpponent3" class="col-3 col-md-2 h-100" src="" />
+						<img id="secondCardOpponent3" class="col-3 col-md-2 h-100" src="" />
+					</div>
+		
+					<label></label> <br />
+					Bet: <label></label>
+					Money: <label></label>
+				</div>
+			</div>
 
-			<br />
+			<div class="row center-element">
+				<div class="col" id="deck">			
+					Pot : <label id="pot"></label>
 
-			<img id="deckCard1" class="cards" src="" />
-			<img id="deckCard2" class="cards" src="" />
-			<img id="deckCard3" class="cards" src="" />
-			<img id="deckCard4" class="cards" src="" />
-			<img id="deckCard5" class="cards" src="" />
+					<div class="container">
+						<img id="deckCard1" class="col-3 col-md-2 h-100" src="" />
+						<img id="deckCard2" class="col-3 col-md-2 h-100" src="" />
+						<img id="deckCard3" class="col-3 col-md-2 h-100" src="" />
+						<img id="deckCard4" class="col-3 col-md-2 h-100" src="" />
+						<img id="deckCard5" class="col-3 col-md-2 h-100" src="" />
+					</div>
 
-			<br />
+					<input type="button" id="startTurn" value="Start new turn" onclick="startTurn()" style="display: none;" />
+				</div>
+			</div>
 
-			<input type="button" id="startTurn" value="Start new turn" onclick="startTurn()" style="display: none;" />
+			<div class="row fixed-bottom mb-3">
+				<div class="col" id="player">
+		
+					<div class="container">
+						Bet : <label id="bet"></label>
+
+						<img id="firstCard" class="col-3 col-md-2 h-100" src="" />
+						<img id="secondCard" class="col-3 col-md-2 h-100" src="" />
+
+						Money : <label id="money"></label>
+					</div>
+		
+					<input type="button" value="Fold" onclick="fold()" />
+					<input type="button" value="Check/Follow" onclick="checkOrFollow()" />
+					<input type="button" value="Raise" onclick="raise()" />
+					<input type="number" id="raiseAmount" placeholder="Raise amount" />
+					<input type="button" value="All In" onclick="allIn()" />
+				</div>
+			</div>
 		</div>
+	</body>
 
-		<div id="player">
-			Bet : <label id="bet"></label>
+	<body onload="init()">
+		
 
-			<img id="firstCard" class="cards" src="" />
-			<img id="secondCard" class="cards" src="" />
-
-			Money : <label id="money"></label>
-
-				<br />
-
-			<input type="button" value="Fold" onclick="fold()" />
-			<input type="button" value="Check/Follow" onclick="checkOrFollow()" />
-			<input type="button" value="Raise" onclick="raise()" />
-			<input type="number" id="raiseAmount" placeholder="Raise amount" />
-			<input type="button" value="All In" onclick="allIn()" />
-		</div>
-
-		<div id="opponent1">
-			<img id="firstCardOpponent1" class="cards" src="" />
-			<img id="secondCardOpponent1" class="cards" src="" />
-
-				<br />
-
-			<label></label> <br />
-			Bet: <label></label> <br />
-			Money: <label></label>
-		</div>
-
-		<div id="opponent2">
-			<img id="firstCardOpponent2" class="cards" src="" />
-			<img id="secondCardOpponent2" class="cards" src="" />
-
-			<br />
-
-			<label></label> <br />
-			Bet: <label></label> <br />
-			Money: <label></label>
-		</div>
-
-		<div id="opponent3">
-			<img id="firstCardOpponent3" class="cards" src="" />
-			<img id="secondCardOpponent3" class="cards" src="" />
-
-			<br />
-
-			<label></label> <br />
-			Bet: <label></label> <br />
-			Money: <label></label>
-		</div>
+		
 	</body>
 </html>

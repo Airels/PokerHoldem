@@ -91,7 +91,7 @@ function update() {
 				if (deck[i])
 					document.getElementById('deckCard'+(i+1)).src = "resources/" + getSuit(deck[i].suit) + "/" + getRank(deck[i].rank) + ".png";
 				else
-					document.getElementById('deckCard'+(i+1)).src = "resources/back.png";
+					document.getElementById('deckCard'+(i+1)).src = "";
 			}
 		}
 		else if (xhr.readyState == 4 && xhr.status == 400) {

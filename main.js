@@ -24,11 +24,11 @@ app.get('/connect', (req, res) => {
 	let data = {error: ""};
 
 	if (req.query.error == 1)
-		data.error = "Username is required !";
+		data.error = '<label class="alert alert-danger mt-5">Eh oh! Your username is required!</label>';
 	else if (req.query.error == 2)
-		data.error = "Can't add you to the party";
+		data.error = '<label class="alert alert-danger mt-5">Oops! Can\'t add you to the party.</label>';
 	else if (req.query.error == 3)
-		data.error = "You must connect first";
+		data.error = '<label class="alert alert-warning mt-5">Wait a minute! You must be connected first.</label>';
 
 	res.render('index', data);
 });

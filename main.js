@@ -2,6 +2,7 @@ const express = require('express');
 const mustache = require('mustache-express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const htmlspecialchars = require('htmlspecialchars');
 
 const SERVER_PORT = 3000;
 
@@ -60,7 +61,7 @@ app.get('/update', (req, res) => {
 });
 
 app.get('/check', (req, res) => {
-	let username = req.cookies.username;
+	let username = htmlspecialchars(req.body.username);
 
 	game.bet(game.getPlayer(username), 0);
 
@@ -68,7 +69,7 @@ app.get('/check', (req, res) => {
 });
 
 app.get('/raise/:amount', (req, res) => {
-	let username = req.cookies.username;
+	let username = htmlspecialchars(req.body.username);
 
 	game.bet(game.getPlayer(username), req.params.amount);
 
@@ -76,21 +77,21 @@ app.get('/raise/:amount', (req, res) => {
 });
 
 app.get('/fold', (req, res) => {
-	let username = req.cookies.username;
+	let username = htmlspecialchars(req.body.username);
 	game.fold(username);
 
 	res.end();
 });
 
 app.get('/quit', (req, res) => {
-	let username = req.cookies.username;
+	let username = htmlspecialchars(req.body.username);
 
 	game.quitGame(username);
 	res.end();
 });
 
 app.post('/connect', (req, res) => {
-	let username = req.body.username;
+	let username = htmlspecialchars(req.body.username);
 
 	if (!username) {
 		res.redirect('/connect?error=1');

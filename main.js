@@ -30,6 +30,8 @@ app.get('/connect', (req, res) => {
 		data.error = '<label class="alert alert-danger mt-5">Oops! Can\'t add you to the party.</label>';
 	else if (req.query.error == 3)
 		data.error = '<label class="alert alert-warning mt-5">Wait a minute! You must be connected first.</label>';
+	else if (req.query.error == 4)
+		data.error = '<label class="alert alert-danger mt-5">Your username is too long! 20 characters MAX</label>';
 
 	res.render('index', data);
 });
@@ -95,16 +97,14 @@ app.post('/connect', (req, res) => {
 
 	if (!username) {
 		res.redirect('/connect?error=1');
-		return;
-	}
-
-	if (!game.addPlayer(username)) {
+	} else if (username.length > 20) {
+		res.redirect('/connect?error=4');
+	} else if (!game.addPlayer(username)) {
 		res.redirect('/connect?error=2');
-		return;
+	} else {
+		res.cookie("username", username);
+		res.redirect('/play');
 	}
-
-	res.cookie("username", username);
-	res.redirect('/play');
 });
 
 app.use(express.static('./public_html'));
